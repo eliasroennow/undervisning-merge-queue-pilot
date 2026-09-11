@@ -1,0 +1,18 @@
+# Synthetic pilot only. Keep GitHub strict up-to-date protection.
+merge_queue:
+  max_parallel_checks: 1
+queue_rules:
+  - name: default
+    batch_size: 1
+    merge_method: merge
+    checks_timeout: 5 minutes
+    queue_conditions:
+      - base=integration/development
+      - author=eliasroennow
+      - head~=^pilot/
+      - check-success=pilot-check
+    merge_conditions:
+      - base=integration/development
+      - author=eliasroennow
+      - head~=^pilot/
+      - check-success=pilot-check
