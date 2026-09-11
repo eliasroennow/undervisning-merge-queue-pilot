@@ -1,18 +1,33 @@
-# Synthetic pilot only. Keep GitHub strict up-to-date protection.
+# Synthetic SHA-bound admission experiment. No product code.
 merge_queue:
   max_parallel_checks: 1
 queue_rules:
   - name: default
     batch_size: 1
     merge_method: merge
-    checks_timeout: 5 minutes
+    update_method: merge
+    checks_timeout: 15 minutes
     queue_conditions:
       - base=integration/development
       - author=eliasroennow
       - head~=^pilot/
       - check-success=pilot-check
+      - check-success=factory-snapshot
     merge_conditions:
       - base=integration/development
       - author=eliasroennow
       - head~=^pilot/
       - check-success=pilot-check
+      - check-success=factory-snapshot
+pull_request_rules:
+  - name: Queue explicitly admitted synthetic candidates
+    conditions:
+      - base=integration/development
+      - author=eliasroennow
+      - head~=^pilot/attestation-
+      - label=factory:ready
+      - check-success=pilot-check
+      - check-success=factory-snapshot
+    actions:
+      queue:
+        name: default
