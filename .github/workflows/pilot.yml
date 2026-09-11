@@ -1,0 +1,23 @@
+name: Synthetic pilot
+on:
+  push:
+    branches: [main, integration/development]
+  pull_request:
+    branches: [integration/development]
+permissions:
+  contents: read
+jobs:
+  pilot-check:
+    name: pilot-check
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Show tested revision
+        run: git rev-parse HEAD
+      - name: Fixture tests
+        run: node --test verify.test.mjs
+      - name: Combined candidate invariant
+        run: node verify.mjs
